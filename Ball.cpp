@@ -26,7 +26,7 @@ void Ball::resetBall() {
     this->y_vel = rand() % 25 / 100.0 - .13;
 }
 
-void Ball::update(Paddle& leftPaddle, Paddle& rightPaddle, float& dt) {
+void Ball::update(Paddle& leftPaddle, Paddle& rightPaddle) {
     this->ballShape.move(x_vel, y_vel);
 
     // Paddle Collision

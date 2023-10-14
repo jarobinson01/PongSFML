@@ -2,6 +2,7 @@
 
 #include "Global.h"
 #include "Paddle.h"
+#include "PaddleEvent.h"
 
 Paddle::Paddle(int side) {
     this->paddleShape.setSize(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT));
@@ -20,7 +21,8 @@ sf::FloatRect Paddle::getBounds() const {
     return this->paddleShape.getGlobalBounds();
 }
 
-void Paddle::update(sf::Event& event, float& dt) {
+void Paddle::update(sf::Event& event, PaddleEvent& paddleEvent) {
+    float velocity[2];
     if(event.type == sf::Event::KeyPressed || event.type == sf::Event::TextEntered) {
         // LEFT PADDLE MOVEMENT
         if((char)event.text.unicode == 'w' && this->side == 0) {
@@ -45,33 +47,53 @@ void Paddle::update(sf::Event& event, float& dt) {
         if(event.key.scancode == sf::Keyboard::Scan::W && this->side == 0 && !moveDown) {
             this->moveUp = false;
             this->moveDown = false;
+            this->x_vel = 0;
+            this->y_vel = 0;
         }
 
         if(event.key.scancode == sf::Keyboard::Scan::S && this->side == 0 && !moveUp) {
             this->moveUp = false;
             this->moveDown = false;
+            this->x_vel = 0;
+            this->y_vel = 0;
         }
 
         if(event.key.scancode == sf::Keyboard::Scan::Up && this->side == 1 && !moveDown) {
             this->moveUp = false;
             this->moveDown = false;
+            this->x_vel = 0;
+            this->y_vel = 0;
         }
 
         if(event.key.scancode == sf::Keyboard::Scan::Down && this->side == 1 && !moveUp) {
             this->moveUp = false;
             this->moveDown = false;
+            this->x_vel = 0;
+            this->y_vel = 0;
         }
     }
+
+    paddleEvent.x_vel = this->x_vel;
+    paddleEvent.y_vel = this->y_vel;
 
     if(moveUp) {
         if(this->paddleShape.getPosition().y < 0)
             return;
-        this->paddleShape.move(0, -.25);
+        this->y_vel = -.25;
+        this->paddleShape.move(x_vel, y_vel);
     } else if(moveDown) {
         if(this->paddleShape.getPosition().y + PADDLE_HEIGHT > SCREEN_HEIGHT)
             return;
-        this->paddleShape.move(0, .25);
+        this->y_vel = .25;
+        this->paddleShape.move(x_vel, y_vel);
     }
+
+    paddleEvent.x_vel = this->x_vel;
+    paddleEvent.y_vel = this->y_vel;
+}
+
+void Paddle::update(float x_vel, float y_vel) {
+    this->paddleShape.move(x_vel, y_vel);
 }
 
 void Paddle::render(sf::RenderTarget& target) {

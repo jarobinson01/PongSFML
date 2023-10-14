@@ -14,6 +14,6 @@ class Ball {
 public:
     Ball();
 
-    void update(Paddle&, Paddle&, float&);
+    void update(Paddle&, Paddle&);
     void render(sf::RenderTarget&);
 };
